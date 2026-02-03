@@ -3,13 +3,10 @@ package org.dijul.shorturl.service;
 import com.aerospike.client.AerospikeClient;
 import org.dijul.shorturl.model.ShortUrl;
 import org.dijul.shorturl.repository.UrlRepository;
-import io.seruco.encoding.base62.Base62;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 
 @Service
