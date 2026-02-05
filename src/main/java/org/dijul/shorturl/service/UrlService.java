@@ -5,9 +5,9 @@ import org.dijul.shorturl.model.ShortUrl;
 import org.dijul.shorturl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UrlService {
@@ -24,26 +24,42 @@ public class UrlService {
     Base62Encoder base62Encoder;
 
 
-    public String shortUrl(String url) {
-        Long uniqueId= sequenceGeneratorService.generateNextId();
-        String shortCode=base62Encoder.encode(uniqueId);
+    public String shortUrl(String url, Optional<String>customCode) {
+        String shortCode;
+        try {
+            if (customCode.isPresent()) {
+                String code = customCode.get();
+                boolean exists = urlRepository.existsById(code);
+                if (exists) {
+                    throw new RuntimeException("Custom code already exists. Try with a different one.");
+                } else {
+                    shortCode = customCode.get();
+                }
+            } else {
+                Long uniqueId = sequenceGeneratorService.generateNextId();
+                shortCode = base62Encoder.encode(uniqueId);
+            }
 
-        ShortUrl document = new ShortUrl();
-        document.setShortCode(shortCode);
-        document.setLongUrl(url);
-        document.setCreatedDate(LocalDateTime.now());
-        urlRepository.save(document);
-        return shortCode;
-    }
-
-    public ResponseEntity<String> longUrl(String url) {
-        ShortUrl shortUrl = urlRepository.findById(Long.parseLong(url)).orElse(null);
-        if (shortUrl != null) {
-            shortUrl.setClicks(shortUrl.getClicks() + 1);
-            urlRepository.save(shortUrl);
-            return ResponseEntity.ok(shortUrl.getLongUrl());
+            ShortUrl document = new ShortUrl();
+            document.setShortCode(shortCode);
+            document.setLongUrl(url);
+            document.setCreatedDate(LocalDateTime.now());
+            urlRepository.save(document);
+            return shortCode;
+        } catch (RuntimeException e) {
+            return e.getMessage();
         }
-        return ResponseEntity.notFound().build();
+    }
     }
 
-}
+//    public ResponseEntity<String> longUrl(String url) {
+//        ShortUrl shortUrl = urlRepository.findById(Long.parseLong(url)).orElse(null);
+//        if (shortUrl != null) {
+//            shortUrl.setClicks(shortUrl.getClicks() + 1);
+//            urlRepository.save(shortUrl);
+//            return ResponseEntity.ok(shortUrl.getLongUrl());
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
+
+

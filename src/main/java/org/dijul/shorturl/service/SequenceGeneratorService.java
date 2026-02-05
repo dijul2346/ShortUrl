@@ -43,16 +43,18 @@ public class SequenceGeneratorService {
     private static final String SET_NAME = "sequences";
     private static final String COUNTER_KEY = "url_id_sequence";
     private static final String BIN_NAME = "seq";
-    int f=0;
+
     public Long generateNextId(){
         Key key=new Key(this.namespace,SET_NAME,BIN_NAME);
-        System.out.println(BIN_NAME);
-        Bin incrementBin=new Bin(BIN_NAME,10);
+        Bin bin=new Bin(BIN_NAME,1L);
 
-
-        Record record=aerospikeClient.operate(null,key, Operation.add(incrementBin), Operation.get(BIN_NAME));
-        Long binName= record.getLong(BIN_NAME);
-        return binName;
+        Record record= aerospikeClient.operate(
+                null,
+                key,
+                Operation.add(bin),
+                Operation.get(BIN_NAME)
+        );
+        return record.getLong(BIN_NAME);
     }
 
 

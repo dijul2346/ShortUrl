@@ -5,6 +5,6 @@ import org.springframework.data.aerospike.repository.AerospikeRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UrlRepository extends AerospikeRepository<ShortUrl,Long>{
+public interface UrlRepository extends AerospikeRepository<ShortUrl,String>{
 
 }

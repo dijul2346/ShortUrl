@@ -1,0 +1,10 @@
+services:
+    aerospike:
+        image: aerospike/aerospike-server:latest
+        container_name: aerospike-db
+        ports:
+        - "3000:3000"
+        - "3001:3001"
+        - "3002:3002"
+        environment:
+        - NAMESPACE=url_shortener
