@@ -5,7 +5,6 @@ import com.aerospike.client.Record;
 import com.aerospike.client.policy.RecordExistsAction;
 import com.aerospike.client.policy.WritePolicy;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class SequenceGeneratorService {
     private String namespace;
 
     private static final String SET_NAME = "sequences";
-    private static final String COUNTER_KEY = "url_id_sequence";
     private static final String BIN_NAME = "seq";
 
     public Long generateNextId(){

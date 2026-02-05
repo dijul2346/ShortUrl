@@ -7,7 +7,6 @@ import org.dijul.shorturl.repository.UrlRepository;
 import org.dijul.shorturl.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
