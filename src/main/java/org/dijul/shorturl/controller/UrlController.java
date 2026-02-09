@@ -16,6 +16,7 @@ import java.util.Optional;
 @Configuration
 @RestController
 @RequestMapping("/shorturl")
+@CrossOrigin(origins = {"http://localhost:5173"})
 public class UrlController {
 
     @Autowired
@@ -27,7 +28,9 @@ public class UrlController {
     private HttpServletResponse httpServletResponse;
 
     @PostMapping("/add")
-    public String createShortUrl(@RequestBody RequestDTO request) {
+    public ResponseEntity<String> createShortUrl(@RequestBody RequestDTO request) {
+        System.out.println(request.getLink());
+        System.out.println(request);
         return urlService.shortUrl(request.getLink(), Optional.ofNullable(request.getShortCode()));
     }
 
@@ -59,7 +62,7 @@ public class UrlController {
 
         } catch (RuntimeException e) {
             try {
-                httpServletResponse.sendError(404, "Not found");
+                httpServletResponse.sendError(404, "Link Not found");
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }

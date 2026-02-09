@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -36,8 +37,8 @@ public class UrlServiceTests {
         String longUrl = "https://example.com";
 
         when(repo.existsById(customCode)).thenReturn(false);
-        String response = urlService.shortUrl(longUrl, Optional.of(customCode));
-        assertEquals(response, customCode);
+        ResponseEntity<String> response = urlService.shortUrl(longUrl, Optional.of(customCode));
+        assertEquals(response.getBody(), customCode);
     }
 
     @Test
@@ -45,8 +46,8 @@ public class UrlServiceTests {
         String longUrl = "https://example.com";
         String customCode = "mycode";
         when(repo.existsById(customCode)).thenReturn(true);
-        String response = urlService.shortUrl(longUrl, Optional.of(customCode));
-        assertEquals(response, "Custom code already exists. Try with a different one.");
+        ResponseEntity<String> response = urlService.shortUrl(longUrl, Optional.of(customCode));
+        assertEquals(response.getBody(), "Custom code already exists. Try with a different one.");
 
     }
 
@@ -59,8 +60,8 @@ public class UrlServiceTests {
         when(sequenceGenerator.generateNextId()).thenReturn(uniqueId);
         when(base62Encoder.encode(uniqueId)).thenReturn(shortCode);
 
-        String response = urlService.shortUrl(longUrl, Optional.empty());
-        assertEquals(response, shortCode);
+        ResponseEntity<String> response = urlService.shortUrl(longUrl, Optional.empty());
+        assertEquals(response.getBody(), shortCode);
     }
 
 }

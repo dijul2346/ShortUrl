@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 
 
 import java.util.Optional;
@@ -53,9 +54,10 @@ public class UrlControllerTests {
 
     @Test
     void testCreateShortUrl() {
-        when(urlService.shortUrl(request.getLink(),Optional.ofNullable(request.getShortCode()))).thenReturn("success_code");
-        String result = urlController.createShortUrl(request);
-        assertEquals("success_code", result);
+        when(urlService.shortUrl(request.getLink(),Optional.ofNullable(request.getShortCode()))).thenReturn(ResponseEntity.ok("success_code"));
+        ResponseEntity<String> result = urlController.createShortUrl(request);
+        assertEquals("success_code", result.getBody());
+//        assertEquals("200 OK", result.getStatusCode());
     }
 
     @Test

@@ -5,6 +5,8 @@ import org.dijul.shorturl.model.ShortUrl;
 import org.dijul.shorturl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,14 +26,15 @@ public class UrlService {
     Base62Encoder base62Encoder;
 
 
-    public String shortUrl(String url, Optional<String>customCode) {
+    public ResponseEntity<String> shortUrl(String url, Optional<String>customCode) {
         String shortCode;
         try {
             if (customCode.isPresent()) {
                 String code = customCode.get();
                 boolean exists = urlRepository.existsById(code);
                 if (exists) {
-                    throw new RuntimeException("Custom code already exists. Try with a different one.");
+//                    throw new RuntimeException("Custom code already exists. Try with a different one.");
+                    return new ResponseEntity<>("Custom code already exists. Try with a different one.", HttpStatusCode.valueOf(409));
                 } else {
                     shortCode = customCode.get();
                 }
@@ -45,9 +48,9 @@ public class UrlService {
             document.setLongUrl(url);
             document.setCreatedDate(LocalDateTime.now());
             urlRepository.save(document);
-            return shortCode;
+            return ResponseEntity.ok(shortCode);
         } catch (RuntimeException e) {
-            return e.getMessage();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     }
